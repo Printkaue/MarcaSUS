@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>FPI</title>
+  
+</head>
+<body>
+
+  <div id="conteudo">
+  <h1>Formulário de Propriedade Intelectual</h1>
+
+  <form id="formulario">
+
+    <fieldset id="solicitante" class="bloco">
+      <strong class="titulo-doc">
+        FORMULÁRIO INICIAL PARA PEDIDO DE PROTEÇÃO DE PROPRIEDADE INTELECTUAL
+      </strong>
+
+      <p class="descricao">
+        Encaminho à Diretoria de Inovação Tecnológica do IFPB as informações e anexos
+        abaixo relacionados para dar início ao pedido de proteção e estudo de
+        viabilidade tecnológica.
+      </p>
+
+      <h2>Dados pessoais</h2>
+
+      <div class="grid">
+        <div class="campo">
+          <label>Nome completo</label>
+          <input name="nome" />
+        </div>
+
+        <div class="campo">
+          <label>Email institucional</label>
+          <input name="email" />
+        </div>
+
+        <div class="campo">
+          <label>CPF</label>
+          <input name="cpf" />
+        </div>
+
+        <div class="campo">
+          <label>Nacionalidade</label>
+          <input name="nacionalidade" />
+        </div>
+
+        <div class="campo">
+          <label>Campi de atuação</label>
+          <input name="campi" />
+        </div>
+
+        <div class="campo">
+          <label>Telefone</label>
+          <input name="telefone" />
+        </div>
+      </div>
+
+      <h2>Logradouro</h2>
+
+      <div class="grid">
+        <div class="campo">
+          <label>CEP</label>
+          <input name="cep" />
+        </div>
+
+        <div class="campo">
+          <label>Estado</label>
+          <input name="estado" />
+        </div>
+
+        <div class="campo">
+          <label>Cidade</label>
+          <input name="cidade" />
+        </div>
+
+        <div class="campo">
+          <label>Número</label>
+          <input name="numero" />
+        </div>
+
+        <div class="campo campo-longo">
+          <label>Rua</label>
+          <input name="rua" />
+        </div>
+      </div>
+
+      <h2>Cargo</h2>
+
+      <div class="cargos">
+        <label><input type="checkbox" /> Professor</label>
+        <label><input type="checkbox" /> Técnico/Administrativo</label>
+      </div>
+    </fieldset>
+
+    <div id="pessoas"></div>
+
+  </form>
+</div>
+  <div class="acoes">
+    <button type="button" onclick="adicionarPessoa()">+ Adicionar Responsável</button>
+    <button type="button" onclick="baixarPDF()">Baixar PDF</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
