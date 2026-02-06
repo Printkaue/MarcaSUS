@@ -72,7 +72,15 @@ fieldset.innerHTML = `
       <input name="rua" />
     </div>
   </div>
-  
+
+  <h2>Cargo</h2>
+
+      <div class="cargos">
+        <label><input name="cargo" value="Professor" type="checkbox" /> Professor</label>
+        <label><input name="cargo" value="Aluno" type="checkbox" /> Aluno</label>
+        <label><input name="cargo" value="Técnico/Administrativo" type="checkbox" /> Técnico/Administrativo</label>
+      </div>
+
 `
 
   pessoasDiv.appendChild(fieldset)
@@ -163,6 +171,16 @@ function gerarPDF(dados, pessoas = []) {
   campo("Rua:", dados.rua, 10, 190)
   y += 10
 
+  tituloSecao("Cargo")
+  campo(
+  "Cargo:",
+  dados.cargo && dados.cargo.length
+    ? dados.cargo.join(" / ")
+    : "-"
+)
+y += 8
+
+
   // =====================
   // RESPONSÁVEIS
   // =====================
@@ -205,6 +223,16 @@ function gerarPDF(dados, pessoas = []) {
     y += 8
 
     campo("Rua:", pessoa.rua, 10, 190)
+
+    tituloSecao("Cargo")
+    campo(
+      "Cargo:",
+      pessoa.cargo && pessoa.cargo.length
+        ? pessoa.cargo.join(" / ")
+        : "-"
+    )
+    y += 8
+
   })
 
   doc.save("formulario_propriedade_intelectual.pdf")
@@ -215,23 +243,33 @@ function coletarDadosSolicitante() {
   const dados = {}
 
   solicitante.querySelectorAll("input").forEach(input => {
-    dados[input.name] = input.value
+    if (input.type === "checkbox") {
+      if (!dados.cargo) dados.cargo = []
+      if (input.checked) dados.cargo.push(input.value)
+    } else {
+      dados[input.name] = input.value
+    }
   })
 
   return dados
 }
 
+
 function coletarDadosResponsaveis() {
   const pessoas = []
 
   document.querySelectorAll(".responsavel").forEach(bloco => {
-    const pessoa = {}
+    const pessoa = { cargo: [] }
 
     bloco.querySelectorAll("input").forEach(input => {
-      pessoa[input.name] = input.value
+      if (input.type === "checkbox") {
+        if (input.checked) pessoa.cargo.push(input.value)
+      } else {
+        pessoa[input.name] = input.value
+      }
     })
 
-    if (pessoa.nome || pessoa.cpf || pessoa.email) {
+    if (pessoa.nome) {
       pessoas.push(pessoa)
     }
   })
@@ -242,9 +280,6 @@ function coletarDadosResponsaveis() {
 function baixarPDF() {
   const dadosSolicitante = coletarDadosSolicitante()
   const pessoas = coletarDadosResponsaveis()
-
-  console.log("Solicitante:", dadosSolicitante)
-  console.log("Responsáveis:", pessoas)
 
   gerarPDF(dadosSolicitante, pessoas)
 }
