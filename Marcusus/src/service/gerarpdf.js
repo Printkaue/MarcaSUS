@@ -1,8 +1,41 @@
-import {jsPDF} from "jspdf"
+import { jsPDF } from "jspdf"
 
 function GerarPDF(dados, pessoas = []) {
   const doc = new jsPDF()
   let y = 20
+
+  // =====================
+  // FUNÇÕES AUXILIARES
+  // =====================
+  function verificarQuebra(altura = 20) {
+    if (y + altura > 280) {
+      doc.addPage()
+      y = 20
+    }
+  }
+
+  function tituloSecao(texto) {
+    verificarQuebra(12)
+
+    doc.setFillColor(240, 240, 240)
+    doc.rect(10, y - 6, 190, 8, "F")
+
+    doc.setFont("helvetica", "bold")
+    doc.setFontSize(11)
+    doc.text(texto, 12, y)
+
+    y += 10
+  }
+
+  function campo(label, valor, x = 10, largura = 90) {
+    doc.setFont("helvetica", "bold")
+    doc.text(label, x, y)
+
+    doc.setFont("helvetica", "normal")
+    doc.text(valor || "-", x + 35, y)
+
+    doc.line(x + 35, y + 1, x + largura, y + 1)
+  }
 
   // =====================
   // CABEÇALHO
@@ -26,30 +59,6 @@ function GerarPDF(dados, pessoas = []) {
   y += 10
 
   // =====================
-  // FUNÇÕES AUXILIARES
-  // =====================
-  function tituloSecao(texto) {
-    doc.setFillColor(240, 240, 240)
-    doc.rect(10, y - 6, 190, 8, "F")
-
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(11)
-    doc.text(texto, 12, y)
-
-    y += 10
-  }
-
-  function campo(label, valor, x = 10, largura = 90) {
-    doc.setFont("helvetica", "bold")
-    doc.text(label, x, y)
-
-    doc.setFont("helvetica", "normal")
-    doc.text(valor || "-", x + 35, y)
-
-    doc.line(x + 35, y + 1, x + largura, y + 1)
-  }
-
-  // =====================
   // SOLICITANTE
   // =====================
   tituloSecao("DADOS DO SOLICITANTE")
@@ -68,9 +77,6 @@ function GerarPDF(dados, pessoas = []) {
   campo("Campi:", dados.campi, 10, 190)
   y += 12
 
-  // =====================
-  // ENDEREÇO
-  // =====================
   tituloSecao("LOGRADOURO")
 
   campo("CEP:", dados.cep, 10)
@@ -86,20 +92,16 @@ function GerarPDF(dados, pessoas = []) {
 
   tituloSecao("Cargo")
   campo(
-  "Cargo:",
-  dados.cargo && dados.cargo.length
-    ? dados.cargo.join(" / ")
-    : "-"
-)
-y += 8
-
+    "Cargo:",
+    dados.cargo?.length ? dados.cargo.join(" / ") : "-"
+  )
+  y += 12
 
   // =====================
   // RESPONSÁVEIS
   // =====================
   pessoas.forEach((pessoa, index) => {
-    doc.addPage()
-    y = 20
+    verificarQuebra(30)
 
     doc.setFont("helvetica", "bold")
     doc.setFontSize(13)
@@ -136,16 +138,14 @@ y += 8
     y += 8
 
     campo("Rua:", pessoa.rua, 10, 190)
+    y += 10
 
     tituloSecao("Cargo")
     campo(
       "Cargo:",
-      pessoa.cargo && pessoa.cargo.length
-        ? pessoa.cargo.join(" / ")
-        : "-"
+      pessoa.cargo?.length ? pessoa.cargo.join(" / ") : "-"
     )
-    y += 8
-
+    y += 12
   })
 
   doc.save("formulario_propriedade_intelectual.pdf")
