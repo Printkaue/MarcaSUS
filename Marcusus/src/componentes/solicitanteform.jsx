@@ -121,6 +121,24 @@ function SolicitanteForm({dados, onChange, onCargoChange}){
             />
             Técnico/Administrativo
         </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={dados.cargo.includes("Outro")}
+            onChange={() => onCargoChange("Outro")}
+          />
+          Outro
+        </label>
+        {dados.cargo.includes("Outro") && (
+          <input
+            type="text"
+            placeholder="Digite o cargo"
+            value={dados.outroCargo}
+            onChange={(e) => onChange("outroCargo", e.target.value)}
+          />
+        )}
+
         </div>
 
     </fieldset>

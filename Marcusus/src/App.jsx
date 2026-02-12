@@ -16,7 +16,9 @@ function App() {
   numero: "",
   campi: "",
   telefone: "",
-  cargo: []
+  cargo: [],
+  outroCargo: ""
+
 })
 
   const [responsaveis, setResponsaveis] = useState([])
@@ -24,7 +26,7 @@ function App() {
   function adicionarResponsavel() {
     setResponsaveis(prev => [
       ...prev,
-      { nome: "", email: "", cpf: "", cep: "", cidade: "", rua: "", numero: "", campi: "", telefone: "", cargo: [] }
+      { nome: "", email: "", cpf: "", cep: "", cidade: "", rua: "", numero: "", campi: "", telefone: "", cargo: [], outroCargo: "" }
     ])
   }
 

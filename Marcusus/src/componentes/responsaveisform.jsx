@@ -1,6 +1,6 @@
 function ResposavelForm({index, dados, onChange, onCargoChange }){
     return(
-        <fieldset classNameName="responsavel">
+        <fieldset className="responsavel">
     <strong className="titulo-doc">RESPONSÁVEL {index +1}</strong>
 
   <h2>Dados pessoais</h2>
@@ -130,6 +130,28 @@ function ResposavelForm({index, dados, onChange, onCargoChange }){
             />
             Técnico/Administrativo
         </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={dados.cargo.includes("Outro")}
+            onChange={() => onCargoChange(index, "Outro")}
+          />
+          Outro
+        </label>
+        {dados.cargo.includes("Outro") && (
+          <div style={{ marginTop: "8px" }}>
+            <input
+              type="text"
+              placeholder="Digite o cargo"
+              value={dados.outroCargo}
+              onChange={(e) =>
+                onChange(index, "outroCargo", e.target.value)
+              }
+            />
+          </div>
+        )}
+
         </div>
 
         </fieldset>

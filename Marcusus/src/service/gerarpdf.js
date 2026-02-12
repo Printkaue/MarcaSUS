@@ -4,16 +4,27 @@ function GerarPDF(dados, pessoas = []) {
   const doc = new jsPDF()
   let y = 20
 
+  let pgnN = 0
+
   // =====================
   // FUNÇÕES AUXILIARES
   // =====================
   function verificarQuebra(altura = 20) {
     if (y + altura > 280) {
+      
       doc.addPage()
       y = 20
     }
   }
 
+  function formatarCargo(obj) {
+    if (!obj.cargo?.length) return "-"
+
+    return obj.cargo
+      .map(c => c === "Outro" ? obj.outroCargo || "Outro" : c)
+      .join(" / ")
+  }
+  
   function tituloSecao(texto) {
     verificarQuebra(12)
 
@@ -41,20 +52,53 @@ function GerarPDF(dados, pessoas = []) {
   // CABEÇALHO
   // =====================
   doc.setFont("helvetica", "bold")
-  doc.setFontSize(14)
-  doc.text("FORMULÁRIO DE PROPRIEDADE INTELECTUAL", 105, y, { align: "center" })
+  doc.setFontSize(8)
+
+  const imgWidth = 60
+  const imgHeight = 20 
+
+  const xCentro = 105 - imgWidth / 2
+
+  doc.addImage("/logo.png", "PNG", xCentro, y, imgWidth, imgHeight)
+
+  y += imgHeight + 5
+
+
+  const texto = `INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DA PARAÍBA
+  PRÓ-REITORIA DE PESQUISA, INOVAÇÃO E PÓS-GRADUAÇÃO
+  DIRETORIA DE INOVAÇÃO TECNOLÓGICA
+  PROGRAMA INSTITUCIONAL DE APOIO À GESTÃO DA INOVAÇÃO
+  PIAGI/DIT/PRPRIPG/IFPB`
+
+  const linhas = doc.splitTextToSize(texto, 180)
+
+  doc.text(linhas, 105, y, { align: "center" })
+
+  y += linhas.length * 4
 
   y += 6
   doc.setFontSize(10)
   doc.setFont("helvetica", "normal")
   doc.text(
-    "Pedido inicial para proteção e estudo de viabilidade tecnológica",
+    "FORMULÁRIO INICIAL PARA PEDIDO DE PROTEÇÃO DE PROPRIEDADE INTELECTUAL",
     105,
     y,
     { align: "center" }
   )
 
   y += 6
+  doc.line(10, y, 200, y)
+  y += 10
+
+  const legenda = `Encaminho à Diretoria de Inovação Tecnológica do IFPB, as informações e anexos, abaixo relacionados, a fim de dar início ao pedido 
+de proteção e estudo de viabilidade tecnológica, para futuro registro de Propriedade Intelectual. `
+
+  const linhasl = doc.splitTextToSize(legenda, 180)
+
+  doc.text(linhasl, 105, y, { align: "center" })
+
+  y += linhasl.length * 4
+
   doc.line(10, y, 200, y)
   y += 10
 
@@ -91,10 +135,8 @@ function GerarPDF(dados, pessoas = []) {
   y += 10
 
   tituloSecao("Cargo")
-  campo(
-    "Cargo:",
-    dados.cargo?.length ? dados.cargo.join(" / ") : "-"
-  )
+  campo("Cargo:", formatarCargo(dados))
+
   y += 12
 
   // =====================
@@ -141,12 +183,32 @@ function GerarPDF(dados, pessoas = []) {
     y += 10
 
     tituloSecao("Cargo")
-    campo(
-      "Cargo:",
-      pessoa.cargo?.length ? pessoa.cargo.join(" / ") : "-"
-    )
+
+    campo("Cargo", formatarCargo(pessoa))
+
     y += 12
   })
+
+  // =====================
+  // NUMERAÇÃO DE PÁGINAS
+  // =====================
+
+const totalPages = doc.getNumberOfPages()
+
+for (let i = 1; i <= totalPages; i++) {
+  doc.setPage(i)
+
+  doc.setFontSize(9)
+  doc.setFont("helvetica", "normal")
+
+  doc.text(
+    `Página ${i} de ${totalPages}`,
+    105,
+    290,
+    { align: "center" }
+  )
+}
+
 
   doc.save("formulario_propriedade_intelectual.pdf")
 }
