@@ -14,7 +14,12 @@ h1 {
   margin-bottom: 30px;
 }
 
-form {
+.bloco {
+  max-width: 900px;
+  margin: auto;
+}
+
+.Infos {
   max-width: 900px;
   margin: auto;
 }
